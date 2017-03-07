@@ -25,7 +25,7 @@ namespace base {
             HRESULT ansi_2_utf16le(const void * src, size_t src_size, void * dst, size_t * dst_size)
         {
             CHECKSIZE(*dst_size);
-			#ifdef WIN32
+            #ifdef WIN32
             size_t dst_cbsize = *dst_size; dst_cbsize = dst_cbsize >> 1;
             HRESULT hr;
             hr = ansi_2_utf16le_windows((const char *)src,src_size,(wchar_t*)dst,&dst_cbsize);
