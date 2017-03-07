@@ -1,6 +1,6 @@
 
-#ifndef ENCODE_STD_WRAPPER_H_
-#define ENCODE_STD_WRAPPER_H_
+#ifndef CORE_STD_WRAPPER_ENCODING_H_
+#define CORE_STD_WRAPPER_ENCODING_H_
 
 #include "encoding.h"
 
@@ -140,4 +140,4 @@ inline
     return tstring_2_wstring(src.c_str(),src.size(),ws);
 }
 
-#endif //ENCODE_STD_WRAPPER_H_
+#endif //CORE_STD_WRAPPER_ENCODING_H_
