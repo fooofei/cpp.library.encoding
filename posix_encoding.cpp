@@ -99,7 +99,7 @@ namespace base {
         // !!! src must be NULL terminate.
         HRESULT utf32le_2_ansi_posix2(const void * src, size_t , void * dst, size_t * dst_size)
         {
-            char * restore_val = setlocale (LC_ALL, NULL);
+            char * restore_val = setlocale (LC_ALL, NULL); // not thread safe, `restore_val`'s memory may be allocated in static storage.
             char * restore_val2 = strdup (restore_val);
             HRESULT hr=S_OK;
             size_t z;
