@@ -19,7 +19,7 @@ namespace base {
         }
 
         // 00fe316d3e96a0d4964a0fa60bbd7ae7 尾部有垃圾数据 导致 size 没对齐
-		#define CHECKSIZE(size) do {if( !is_even_size(size))	{ if(size) {--size;}} } while(0);
+        #define CHECKSIZE(size) do {if( !is_even_size(size))	{ if(size) {--size;}} } while(0);
 
         inline
             HRESULT ansi_2_utf16le(const void * src, size_t src_size, void * dst, size_t * dst_size)
@@ -31,82 +31,82 @@ namespace base {
             hr = ansi_2_utf16le_windows((const char *)src,src_size,(wchar_t*)dst,&dst_cbsize);
             *dst_size = dst_cbsize<<1;
             return hr;
-			#else
+            #else
             return ansi_2_utf16le_posix(src,src_size,dst,dst_size);
-			#endif
+            #endif
         }
         inline
             HRESULT utf16le_2_ansi(const void * src, size_t src_size, void * dst, size_t * dst_size)
         {
             CHECKSIZE(src_size);
-			#ifdef WIN32
+            #ifdef WIN32
             return utf16le_2_ansi_windows((const wchar_t *)src,src_size>>1,(char*)dst,dst_size);
-			#else
+            #else
             return utf16le_2_ansi_posix(src,src_size,dst,dst_size);
-			#endif
+            #endif
         }
 
         inline
             HRESULT utf8_2_utf16le(const void * src, size_t src_size, void * dst, size_t * dst_size)
         {
             CHECKSIZE(*dst_size);
-			#ifdef WIN32
+            #ifdef WIN32
             size_t z = *dst_size; z =  z >> 1;
             HRESULT hr;
             hr = utf8_2_utf16le_windows((const char *)src, src_size,(wchar_t*)dst,&z);
             *dst_size = z << 1;
             return hr;
-			#else
+            #else
             return utf8_2_utf16le_posix(src,src_size,dst,dst_size);
-			#endif
+            #endif
         }
         inline 
             HRESULT utf16le_2_utf8(const void * src, size_t src_size, void * dst, size_t * dst_size)
         {
             CHECKSIZE(src_size);
-			#ifdef WIN32
+            #ifdef WIN32
             return utf16le_2_utf8_windows((const wchar_t *)src,src_size>>1,(char*)dst,dst_size);
-			#else
+            #else
             return utf16le_2_utf8_posix(src,src_size,dst,dst_size);
-			#endif
+            #endif
         }
 
         inline
             HRESULT string_2_wstring(const void * src, size_t src_size, void * dst, size_t * dst_size)
         {
-			#ifdef WIN32
+            #ifdef WIN32
             return ansi_2_utf16le(src,src_size,dst,dst_size);
-			#else
+            #else
             return ansi_2_utf32le_posix(src,src_size,dst,dst_size);
-			#endif
+            #endif
         }
         inline
             HRESULT wstring_2_string(const void * src, size_t src_size, void * dst, size_t * dst_size)
         {
-			#ifdef WIN32
+            #ifdef WIN32
             return utf16le_2_ansi(src,src_size,dst,dst_size);
-			#else
+            #else
             return utf32le_2_ansi_posix(src,src_size,dst,dst_size);
-			#endif
+            #endif
         }
 
         inline
             HRESULT wstring_2_utf8(const void * src, size_t src_size, void * dst, size_t * dst_size)
         {
-			#ifdef WIN32
+            #ifdef WIN32
             return utf16le_2_utf8(src,src_size,dst,dst_size);
-			#else
+            #else
             return utf32le_2_utf8_posix(src,src_size,dst,dst_size);
-			#endif
+            #endif
         }
         inline
             HRESULT utf8_2_wstring(const void * src, size_t src_size, void * dst, size_t  * dst_size)
         {
-			#ifdef WIN32
+            #ifdef WIN32
             return utf8_2_utf16le(src,src_size,dst,dst_size);
-			#else
+            #else
             return utf8_2_utf32le_posix(src,src_size,dst,dst_size);
-			#endif
+            #endif
         }
 
 
