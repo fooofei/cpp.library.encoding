@@ -3,6 +3,8 @@
 #define CORE_STD_WRAPPER_ENCODING_H_
 
 #include "encoding.h"
+using base::encoding::string_2_wstring;
+using base::encoding::wstring_2_string;
 
 #include <string>
 
@@ -12,8 +14,8 @@ inline typename string_type::pointer pointer_begin(string_type& str)
     return &str[0];
 }
 
-using base::encoding::string_2_wstring;
-using base::encoding::wstring_2_string;
+
+
 inline 
     HRESULT string_2_wstring(const char* s , size_t l , std::wstring& dst)
 {
@@ -75,12 +77,12 @@ namespace base
 inline 
     HRESULT string_2_tstring(const char * s, size_t l, base::string_t & dst)
 {
-#ifdef UNICODE
+	#ifdef UNICODE
     return string_2_wstring(s, l, dst);
-#else
+	#else
     dst.assign(s, l);
     return S_OK;
-#endif
+	#endif
 }
 
 inline 
@@ -92,12 +94,12 @@ inline
 inline 
     HRESULT wstring_2_tstring(const wchar_t * s, size_t l, base::string_t & dst)
 {
-#ifdef UNICODE
+	#ifdef UNICODE
     dst.assign(s, l);
     return S_OK;
-#else
+	#else
     return wstring_2_string(s, l, dst);
-#endif
+	#endif
 }
 
 inline
@@ -109,12 +111,12 @@ inline
 inline 
     HRESULT tstring_2_string(const TCHAR * s, size_t l, std::string & dst)
 {
-#ifdef UNICODE
+	#ifdef UNICODE
     return wstring_2_string(s,l,dst);
-#else
+	#else
     dst.assign(s,l);
     return S_OK;
-#endif
+	#endif
 }
 
 inline
@@ -126,12 +128,12 @@ inline
 inline 
     HRESULT tstring_2_wstring(const TCHAR * s, size_t l, std::wstring & dst)
 {
-#ifdef UNICODE
+	#ifdef UNICODE
     dst.assign(s,l);
     return S_OK;
-#else
+	#else
     return string_2_wstring(s,l,dst);
-#endif
+	#endif
 }
 
 inline 

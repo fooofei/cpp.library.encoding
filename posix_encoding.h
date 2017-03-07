@@ -11,21 +11,21 @@ namespace base {
     namespace encoding {
 
         typedef int HRESULT;
-#ifndef E_INVALIDARG 
-#define E_INVALIDARG  (HRESULT)0x80070057L
-#endif
-#ifndef E_OUTOFMEMORY
-#define E_OUTOFMEMORY (HRESULT)0x8007000EL
-#endif
-#ifndef S_OK
-#define S_OK    (HRESULT)0L
-#endif
-#ifndef E_FAIL
-#define E_FAIL  (HRESULT)0x80004005L
-#endif
-#ifndef FAILED
-#define FAILED(hr) (((HRESULT)(hr)) < 0)
-#endif
+		#ifndef E_INVALIDARG 
+		#define E_INVALIDARG  (HRESULT)0x80070057L
+		#endif
+		#ifndef E_OUTOFMEMORY
+		#define E_OUTOFMEMORY (HRESULT)0x8007000EL
+		#endif
+		#ifndef S_OK
+		#define S_OK    (HRESULT)0L
+		#endif
+		#ifndef E_FAIL
+		#define E_FAIL  (HRESULT)0x80004005L
+		#endif
+		#ifndef FAILED
+		#define FAILED(hr) (((HRESULT)(hr)) < 0)
+		#endif
         
 
 
@@ -54,10 +54,10 @@ namespace base {
             }
         }
 
-#define ICONV_CODE_UTF16LE "utf-16le"
-#define ICONV_CODE_ANSI "gb18030//IGNORE"
-#define ICONV_CODE_UTF8 "utf-8"
-#define ICONV_CODE_UTF32LE "utf-32le"
+		#define ICONV_CODE_UTF16LE "utf-16le"
+		#define ICONV_CODE_ANSI "gb18030//IGNORE"
+		#define ICONV_CODE_UTF8 "utf-8"
+		#define ICONV_CODE_UTF32LE "utf-32le"
         inline
             HRESULT utf16le_2_ansi_posix(const void * src, size_t src_size, void * dst, size_t * dst_size)
         {
