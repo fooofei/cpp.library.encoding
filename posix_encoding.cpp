@@ -2,8 +2,12 @@
 #include "posix_encoding.h"
 
 #ifndef WIN32
-
+#include <iconv.h>
 #include <errno.h>
+#include <locale.h>
+
+#include <stdlib.h>
+
 namespace base { 
     namespace encoding {
 
@@ -91,7 +95,46 @@ namespace base {
             return S_OK;
         }
 
+        //
+        // !!! src must be NULL terminate.
+        HRESULT utf32le_2_ansi_posix2(const void * src, size_t , void * dst, size_t * dst_size)
+        {
+            char * restore_val = setlocale (LC_ALL, NULL);
+            char * restore_val2 = strdup (restore_val);
+            HRESULT hr=S_OK;
+            size_t z;
 
+            setlocale(LC_ALL, "zh_CN.GBK");
+
+            if (dst) z = wcstombs((char *)dst,(const wchar_t *)src,*dst_size); 
+            else z = wcstombs(NULL,(const wchar_t *)src,0);
+
+            if(z == size_t(-1)) hr = E_FAIL;
+            else *dst_size = z;
+
+            setlocale(LC_ALL, restore_val2);
+            free(restore_val2);
+            return hr;
+        }
+
+        //
+        // !!! src must be NULL terminate.
+        HRESULT ansi_2_utf32le_posix2(const void * src, size_t src_size, void * dst, size_t * dst_size)
+        {
+            char * restore_val = setlocale (LC_ALL, NULL);
+            char * restore_val2 = strdup (restore_val);
+            HRESULT hr=S_OK;
+            size_t z;
+
+            setlocale(LC_ALL, "zh_CN.GBK");
+            if (dst) z = mbstowcs((wchar_t *)dst,(const char *)src,*dst_size>>1);
+            else z = mbstowcs(NULL,(const char *)src,0);
+            if (z == size_t(-1)) hr = E_FAIL;
+            else  *dst_size = z<<1; 
+            setlocale(LC_ALL, restore_val2);
+            free(restore_val2);
+            return hr;
+        }
     };
 };
 

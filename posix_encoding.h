@@ -4,8 +4,7 @@
 
 
 #ifndef WIN32
-
-#include <iconv.h>
+#include <string.h>
 
 namespace base { 
     namespace encoding {
@@ -102,6 +101,13 @@ namespace base {
             return iconv_posix(ICONV_CODE_UTF8,ICONV_CODE_UTF32LE,src,src_size,dst,dst_size);
         }
 
+        //
+        // !!! src must be NULL terminate.
+        HRESULT utf32le_2_ansi_posix2(const void * src, size_t , void * dst, size_t * dst_size);
+
+        //
+        // !!! src must be NULL terminate.
+        HRESULT ansi_2_utf32le_posix2(const void * src, size_t src_size, void * dst, size_t * dst_size);
     };
 } ; 
 
