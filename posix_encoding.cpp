@@ -20,6 +20,7 @@ namespace base {
             size_t dst_cbsize=0x100;
             char* inbuf(const_cast<char*>(src));
             char *outbuf (dst);
+            HRESULT hr=S_OK;
 
             cd = iconv_open(dstcode, srccode);
             if (cd == (iconv_t)(-1)) return E_FAIL;
@@ -50,14 +51,15 @@ namespace base {
                     break;
                 }
             }
-            if( berror ) 
+            if( berror )  hr = E_FAIL;
+            else 
             {
-                return E_FAIL;
+                rtsize += dst_cbsize-outbytesleft;
+                *out_size = dst_cbsize;
+                hr = S_OK;
             }
-            else rtsize += dst_cbsize-outbytesleft;
             iconv_close(cd);
-            *out_size = dst_cbsize;
-            return S_OK;
+            return hr;
         }
 
         HRESULT encoding_convt(const char* srccode,const char* dstcode,const char* src , size_t srcCbsize ,
@@ -66,6 +68,7 @@ namespace base {
             iconv_t cd;
             char* inbuf(const_cast<char*>(src));
             char *outbuf (dst);
+            HRESULT hr=S_OK;
 
             cd = iconv_open(dstcode,srccode);
             if (cd == (iconv_t)(-1)) return E_FAIL;
@@ -89,10 +92,14 @@ namespace base {
                 }
             }
             if( berror ) return E_FAIL;
-            else rtsize = *dstCbSize - outbytesleft;
+            else
+            {
+                rtsize = *dstCbSize - outbytesleft;
+                *dstCbSize = rtsize;
+                hr = S_OK;
+            }
             iconv_close(cd);
-            *dstCbSize = rtsize;
-            return S_OK;
+            return hr;
         }
 
         //
