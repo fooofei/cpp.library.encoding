@@ -31,11 +31,11 @@ namespace base {
         static const size_t	 kInvalidSize = size_t(-1);
 
 
-        HRESULT encoding_convt_cbsize(const char* srccode,const char* dstcode,
-            const char* src , size_t src_cbsize,
-            size_t * out_size);
-        HRESULT encoding_convt(const char* srccode,const char* dstcode,const char* src , size_t srcCbsize ,
-            char* dst , size_t * dstCbSize);
+        HRESULT encoding_convt_cbsize(const char * srccode, const char * dstcode
+            ,const char * src , size_t src_cbsize
+            ,size_t * out_size);
+        HRESULT encoding_convt(const char * srccode, const char * dstcode, const char * src, size_t srcCbsize
+            ,char * dst, size_t * dstCbSize);
 
         inline
             HRESULT iconv_posix(const char * code1, const char * code2, 

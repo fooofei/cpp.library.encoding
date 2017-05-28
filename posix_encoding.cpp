@@ -11,15 +11,15 @@
 namespace base { 
     namespace encoding {
 
-        HRESULT encoding_convt_cbsize(const char* srccode,const char* dstcode,
-            const char* src , size_t src_cbsize,
-            size_t * out_size)
+        HRESULT encoding_convt_cbsize(const char * srccode, const char * dstcode
+            ,const char * src, size_t src_cbsize
+            ,size_t * out_size)
         {
             iconv_t cd;
             char dst[0x100]={};
             size_t dst_cbsize=0x100;
-            char* inbuf(const_cast<char*>(src));
-            char *outbuf (dst);
+            char * inbuf(const_cast<char *>(src));
+            char * outbuf (dst);
             HRESULT hr=S_OK;
 
             cd = iconv_open(dstcode, srccode);
@@ -62,12 +62,12 @@ namespace base {
             return hr;
         }
 
-        HRESULT encoding_convt(const char* srccode,const char* dstcode,const char* src , size_t srcCbsize ,
-            char* dst , size_t * dstCbSize)
+        HRESULT encoding_convt(const char * srccode, const char * dstcode, const char * src , size_t srcCbsize 
+            ,char * dst, size_t * dstCbSize)
         {
             iconv_t cd;
-            char* inbuf(const_cast<char*>(src));
-            char *outbuf (dst);
+            char * inbuf(const_cast<char *>(src));
+            char * outbuf (dst);
             HRESULT hr=S_OK;
 
             cd = iconv_open(dstcode,srccode);
@@ -91,7 +91,7 @@ namespace base {
                     break;
                 }
             }
-            if( berror ) return E_FAIL;
+            if( berror ) hr = E_FAIL;
             else
             {
                 rtsize = *dstCbSize - outbytesleft;
