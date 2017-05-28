@@ -30,8 +30,8 @@ HRESULT string_convert( HRESULT (*func_convert)(const void *,size_t, void *, siz
 
 template<typename dest_string_type>
 HRESULT string_convert(HRESULT(*func_convert)(const void *, size_t, void *, size_t *)
-    , const void * ptr, size_t size_of_bytes
-    , dest_string_type & dst)
+    ,const void * ptr, size_t size_of_bytes
+    ,dest_string_type & dst)
 {
     return string_convert(func_convert, ptr, size_of_bytes, dst, sizeof(typename dest_string_type::value_type));
 }
@@ -96,7 +96,7 @@ inline HRESULT utf8_2_string(const char * s, size_t l, std::string & dst)
 
     hr = utf8_2_wstring(s, l, ws);
     if (FAILED(hr)) return hr;
-    return wstring_2_utf8(ws.c_str(), ws.size(), dst);
+    return wstring_2_string(ws.c_str(), ws.size(), dst);
 }
 
 inline HRESULT string_2_utf8(const std::string & s, std::string & utf8)
