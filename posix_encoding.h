@@ -53,13 +53,14 @@ namespace base {
             }
         }
 
-		#define ICONV_CODE_UTF16LE "utf-16le"
-		#define ICONV_CODE_ANSI "gb18030//IGNORE"
-		#define ICONV_CODE_UTF8 "utf-8"
-		#define ICONV_CODE_UTF32LE "utf-32le"
-        inline
-            HRESULT utf16le_2_ansi_posix(const void * src, size_t src_size, void * dst, size_t * dst_size)
-        {
+#define ICONV_CODE_UTF16LE "utf-16le"
+#define ICONV_CODE_ANSI "gb18030//IGNORE"  // the new version of GBK, recommand
+//#define ICONV_CODE_ANSI "gbk" // the subset of gb18030, not recommand
+#define ICONV_CODE_UTF8 "utf-8"
+#define ICONV_CODE_UTF32LE "utf-32le"
+    inline
+        HRESULT utf16le_2_ansi_posix(const void * src, size_t src_size, void * dst, size_t * dst_size)
+    {
             return iconv_posix(ICONV_CODE_UTF16LE,ICONV_CODE_ANSI,src,src_size,dst,dst_size);
         }
         inline

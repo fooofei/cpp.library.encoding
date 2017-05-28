@@ -8,44 +8,47 @@ using base::encoding::wstring_2_string;
 
 #include <string>
 
-template<typename string_type>
-inline typename string_type::pointer pointer_begin(string_type& str)
+template<typename dest_string_type>
+HRESULT string_convert( HRESULT (*func_convert)(const void *,size_t, void *, size_t *)
+    ,const void * ptr, size_t size_of_bytes
+    ,dest_string_type & dst, size_t dest_element_size)
 {
-    return &str[0];
+    if(!(func_convert && ptr && size_of_bytes && dest_element_size)) return E_INVALIDARG;
+
+    dst.clear();
+    HRESULT hr;
+    size_t out_size=0;
+    hr = func_convert(ptr,size_of_bytes,NULL,&out_size);
+    if(FAILED(hr)) return hr;
+    if (out_size)
+    {
+        dst.resize(out_size / dest_element_size);
+        return func_convert(ptr,size_of_bytes, &dst[0],&out_size);
+    }
+    return S_OK;
 }
 
+template<typename dest_string_type>
+HRESULT string_convert(HRESULT(*func_convert)(const void *, size_t, void *, size_t *)
+    , const void * ptr, size_t size_of_bytes
+    , dest_string_type & dst)
+{
+    return string_convert(func_convert, ptr, size_of_bytes, dst, sizeof(typename dest_string_type::value_type));
+}
 
 
 inline 
     HRESULT string_2_wstring(const char* s , size_t l , std::wstring& dst)
 {
-    dst.clear();
-    HRESULT hr;
-    size_t lu=0;
-    hr = string_2_wstring(s,l,NULL,&lu);
-    if(FAILED(hr)) return hr;
-    if (lu)
-    {
-        dst.resize(lu / sizeof(wchar_t));
-        return string_2_wstring(s,l,pointer_begin(dst),&lu);
-    }
-    return S_OK;
+    return string_convert(base::encoding::string_2_wstring
+        , s, l, dst);
 }
 
 inline 
     HRESULT wstring_2_string(const wchar_t* s , size_t l , std::string& dst)
 {
-    dst.clear();
-    HRESULT hr;
-    size_t l1 = 0;
-    hr = wstring_2_string(s, l*sizeof(wchar_t),NULL,&l1);
-    if(FAILED(hr)) return hr;
-    if (l1)
-    {
-        dst.resize(l1);
-        return wstring_2_string(s, l*sizeof(wchar_t), pointer_begin(dst), &l1);
-    }
-    return S_OK;
+    return string_convert(base::encoding::wstring_2_string
+        , s, l * sizeof(wchar_t), dst);
 }
 
 inline
@@ -59,6 +62,77 @@ inline
 {
     return wstring_2_string(ws.c_str(),ws.size(),s);
 }
+
+inline HRESULT utf8_2_wstring(const char * s, size_t l, std::wstring & dst)
+{
+    return string_convert(base::encoding::utf8_2_wstring, s, l, dst);
+}
+inline HRESULT wstring_2_utf8(const wchar_t * s, size_t l, std::string & dst)
+{
+    return string_convert(base::encoding::wstring_2_utf8, s, l * sizeof(wchar_t), dst);
+}
+inline HRESULT utf8_2_wstring(const std::string & s, std::wstring & ws) 
+{
+    return utf8_2_wstring(s.c_str(), s.size(), ws);
+}
+inline HRESULT wstring_2_utf8(const std::wstring & ws, std::string & s)
+{
+    return wstring_2_utf8(ws.c_str(), ws.size(), s);
+}
+
+inline HRESULT string_2_utf8(const char * s, size_t l, std::string & dst)
+{
+    HRESULT hr;
+    std::wstring ws;
+
+    hr = string_2_wstring(s, l, ws);
+    if (FAILED(hr)) return hr;
+    return wstring_2_utf8(ws, dst);
+}
+inline HRESULT utf8_2_string(const char * s, size_t l, std::string & dst)
+{
+    HRESULT hr;
+    std::wstring ws;
+
+    hr = utf8_2_wstring(s, l, ws);
+    if (FAILED(hr)) return hr;
+    return wstring_2_utf8(ws.c_str(), ws.size(), dst);
+}
+
+inline HRESULT string_2_utf8(const std::string & s, std::string & utf8)
+{
+    return string_2_utf8(s.c_str(), s.size(), utf8);
+}
+inline HRESULT utf8_2_string(const std::string & utf8, std::string & s)
+{
+    return utf8_2_string(utf8.c_str(), utf8.size(), s);
+}
+
+
+
+#if __cplusplus >= 201103L
+inline HRESULT string_2_u16string(const char * s, size_t l, std::u16string & dst)
+{
+    return string_convert(base::encoding::string_2_u16string
+        , s, l * sizeof(char), dst);
+}
+
+inline HRESULT string_2_u16string(const std::string & s, std::u16string & dst)
+{
+    return string_2_u16string(s.c_str(), s.size(), dst);
+}
+
+inline HRESULT u16string_2_string(const char16_t * s, size_t l, std::string & dst)
+{
+    return string_convert(base::encoding::u16string_2_string
+        , s, l * sizeof(char16_t), dst);
+}
+
+inline HRESULT u16string_2_string(const std::u16string & s, std::string & dst)
+{
+    return u16string_2_string(s.c_str(), s.size(), dst);
+}
+#endif
 
 #ifndef _tstring
 #ifdef UNICODE

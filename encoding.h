@@ -60,6 +60,7 @@ namespace base {
             return utf8_2_utf16le_posix(src,src_size,dst,dst_size);
             #endif
         }
+
         inline 
             HRESULT utf16le_2_utf8(const void * src, size_t src_size, void * dst, size_t * dst_size)
         {
@@ -70,6 +71,13 @@ namespace base {
             return utf16le_2_utf8_posix(src,src_size,dst,dst_size);
             #endif
         }
+
+
+        
+
+        //
+        // type redefines
+        //
 
         inline
             HRESULT string_2_wstring(const void * src, size_t src_size, void * dst, size_t * dst_size)
@@ -109,6 +117,16 @@ namespace base {
             #endif
         }
 
+        inline 
+            HRESULT string_2_u16string(const void * src, size_t src_size, void * dst, size_t * dst_size)
+        {
+            return ansi_2_utf16le(src, src_size, dst, dst_size);
+        }
+        inline 
+            HRESULT u16string_2_string(const void * src, size_t src_size, void * dst, size_t * dst_size)
+        {
+            return utf16le_2_ansi(src, src_size, dst, dst_size);
+        }
 
         //static const char* kEncodeUtf8Header = "\xEF\xBB\xBF";
         //static const char* kEncodeUtf16LittleEndianHeader="\xFF\xFE";
