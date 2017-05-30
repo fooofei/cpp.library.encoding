@@ -8,6 +8,7 @@
 // in Windows sizeof(wchar_t) is equal with sizeof(unsigned short) ==2,
 // but in linux sizeof(wchat_t) is equal with sizeof(unsigned int) == 4.
 // user the class u16string_bytes_t, to make sure all platform use same memory size.
+// std::u16string is the same effect, but std::u16string is c++11 above.
 class u16string_bytes_t
 {
 public:
