@@ -41,12 +41,14 @@ public:
     }
 
     const void * ptr() const {
+        if (empty()) return NULL;
         return &buf_[0];
     }
     size_t size_of_bytes() const {
         return buf_.size() * sizeof(u16string_bytes_type::value_type);
     }
     void * ptr(){
+        if (empty()) return NULL;
         return &buf_[0];
     }
 
@@ -81,6 +83,7 @@ public:
     }
 
     HRESULT from_u16string(const char16_type * p, size_t l){
+        if (!(p && l)) return E_INVALIDARG;
         const char16_type * e = p+l;
         buf_.assign(
             (u16string_bytes_type::const_pointer)p
@@ -90,6 +93,7 @@ public:
     }
 
     void tolower(){
+        if (empty()) return;
         char16_type * b = (char16_type *)ptr();
         char16_type * e = b + size();
 
