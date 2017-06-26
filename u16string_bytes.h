@@ -27,13 +27,13 @@ private:
     u16string_bytes_type buf_;
 public:
     u16string_bytes_t(){
-        ;
+        //assert sizeof(char16_type) >= sizeof(u16string_bytes_type::value_type);
     }
     explicit u16string_bytes_t(const u16string_bytes_t & rhs){
-        from_u16string(rhs.c_str(),rhs.size());
+        assign(rhs.c_str(),rhs.size());
     }
     u16string_bytes_t(const char16_type * p, size_t l){
-        from_u16string(p,l);
+        assign(p,l);
     }
 
     ~u16string_bytes_t(){
@@ -72,7 +72,7 @@ public:
     }
 
 
-    HRESULT from_string(const std::string & s){
+    HRESULT assign(const std::string & s){
         // string_convert string_2_u16string
         return E_NOTIMPL;
     }
@@ -82,7 +82,7 @@ public:
         return E_NOTIMPL;
     }
 
-    HRESULT from_u16string(const char16_type * p, size_t l){
+    HRESULT assign(const char16_type * p, size_t l){
         if (!(p && l)) return E_INVALIDARG;
         const char16_type * e = p+l;
         buf_.assign(
@@ -91,6 +91,10 @@ public:
             );
         return S_OK;
     }
+    HRESULT assign(const u16string_bytes_t & rhs) {
+        return assign(rhs.c_str(), rhs.size());
+    }
+
 
     void tolower(){
         if (empty()) return;
@@ -169,18 +173,29 @@ public:
         return rhs.size() == size() && startswith(rhs);
     }
 
+    size_t find_first_not_of(const u16string_bytes_t & rhs) const {
+        size_t default_ = std::string::npos;
+        if (empty()) return default_;
+        const char16_type * end = c_str() + size();
+        for (const char16_type * p = c_str();p<end; ++p)
+        {
+            if (!(rhs.find(p, 0, 1) < rhs.size())) {
+                return p - c_str();
+            }
+        }
+        return default_;
+    }
 
     size_t find_last_not_of(const u16string_bytes_t & rhs) const {
         size_t default_ = std::string::npos;
 
-        if (empty())
-        {
-            return default_;
-        }
+        if (empty()) return default_;
+        
 
         const char16_type * end = c_str()+size();
 
-        for(const char16_type * p = end-1;;--p){
+        for(const char16_type * p = end-1;;--p)
+        {
             if (!(rhs.find(p,0,1)<rhs.size()))
             {
                 return p-c_str();
@@ -190,16 +205,28 @@ public:
         return default_;
     }
 
-    void trim_tail(const u16string_bytes_t & s){
-        if (empty())
+    void trim_head(const u16string_bytes_t & s) {
+        if (empty()) return;
+        size_t off = find_first_not_of(s);
+        if (off<size())
         {
-            return ;
+            // erase [0, off)
+            off *= sizeof(char16_type) / sizeof(u16string_bytes_type::value_type);
+            if (off<buf_.size()){
+                buf_.erase(buf_.begin(), buf_.begin() + off);
+            }
         }
+    }
+
+    void trim_tail(const u16string_bytes_t & s){
+        if (empty())  return ;
+        
 
         size_t off = find_last_not_of(s);
         if (off<size())
         {
             off += 1;
+            // erase [off, end)
             off *= sizeof(char16_type)/sizeof(u16string_bytes_type::value_type);
             if (off<buf_.size())
             {
