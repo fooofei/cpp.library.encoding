@@ -205,7 +205,9 @@ public:
         return default_;
     }
 
-    void trim_head(const u16string_bytes_t & s) {
+
+
+    void lstrip(const u16string_bytes_t & s) {
         if (empty()) return;
         size_t off = find_first_not_of(s);
         if (off<size())
@@ -218,7 +220,7 @@ public:
         }
     }
 
-    void trim_tail(const u16string_bytes_t & s){
+    void rstrip(const u16string_bytes_t & s){
         if (empty())  return ;
         
 
@@ -233,6 +235,13 @@ public:
                 buf_.erase(buf_.begin()+off,buf_.end());
             }
         }
+    }
+
+    void trim_head(const u16string_bytes_t & s) {
+        lstrip(s);
+    }
+    void trim_tail(const u16string_bytes_t & s) {
+        return rstrip(s);
     }
 
 };
