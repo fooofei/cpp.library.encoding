@@ -102,6 +102,30 @@ namespace base {
             return iconv_posix(ICONV_CODE_UTF8,ICONV_CODE_UTF32LE,src,src_size,dst,dst_size);
         }
 
+        inline
+            HRESULT utf32le_2_utf16le_posix(const void * src, size_t src_size, void * dst, size_t * dst_size)
+        {
+            return iconv_posix(ICONV_CODE_UTF32LE, ICONV_CODE_UTF16LE, src, src_size, dst, dst_size);
+        }
+
+        inline 
+            HRESULT utf16le_2_utf32le_posix(const void * src, size_t src_size, void * dst, size_t * dst_size)
+        {
+            return iconv_posix(ICONV_CODE_UTF16LE, ICONV_CODE_UTF32LE, src, src_size, dst, dst_size);
+        }
+
+        inline 
+            HRESULT ansi_2_utf8_posix(const void * src, size_t src_size, void * dst, size_t * dst_size)
+        {
+            return iconv_posix(ICONV_CODE_ANSI, ICONV_CODE_UTF8, src, src_size, dst, dst_size);
+        }
+
+        inline 
+            HRESULT utf8_2_ansi_posix(const void * src, size_t src_size, void * dst, size_t * dst_size)
+        {
+            return iconv_posix(ICONV_CODE_UTF8, ICONV_CODE_ANSI,src, src_size, dst, dst_size);
+        }
+
         //
         // !!! src must be NULL terminate.
         HRESULT utf32le_2_ansi_posix2(const void * src, size_t , void * dst, size_t * dst_size);

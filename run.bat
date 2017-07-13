@@ -14,5 +14,5 @@ cmake -G "Visual Studio 15 2017" .. || exit /B 1
 cmake --build . --config Release || exit /B 1
 ::xcopy Release\cpp_python.dll .. /Y
 cd ..
-::rmdir /S /Q build
+rmdir /S /Q build
 encodingdemo.exe || exit /B 1

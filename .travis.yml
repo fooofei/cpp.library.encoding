@@ -1,0 +1,12 @@
+language: cpp
+
+addons:
+  apt:
+    sources:
+      - george-edison55-precise-backports
+    packages:
+      - cmake-data
+      - cmake
+      
+# command to run tests
+script: sh run.sh

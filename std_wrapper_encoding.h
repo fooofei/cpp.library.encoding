@@ -89,6 +89,21 @@ inline HRESULT string_2_utf8(const char * s, size_t l, std::string & dst)
     if (FAILED(hr)) return hr;
     return wstring_2_utf8(ws, dst);
 }
+
+inline HRESULT string_2_utf8_v2(const char * s, size_t l, std::string & dst)
+{
+    HRESULT hr;
+    std::wstring ws;
+#ifdef WIN32
+    hr = string_2_wstring(s, l, ws);
+    if (FAILED(hr)) return hr;
+    return wstring_2_utf8(ws, dst);
+#else
+    return string_convert(base::encoding::ansi_2_utf8_posix, s, l, dst);
+#endif
+}
+
+
 inline HRESULT utf8_2_string(const char * s, size_t l, std::string & dst)
 {
     HRESULT hr;
@@ -99,13 +114,38 @@ inline HRESULT utf8_2_string(const char * s, size_t l, std::string & dst)
     return wstring_2_string(ws.c_str(), ws.size(), dst);
 }
 
+inline HRESULT utf8_2_string_v2(const char * s, size_t l, std::string & dst)
+{
+    HRESULT hr;
+    std::wstring ws;
+
+#ifdef WIN32
+    hr = utf8_2_wstring(s, l, ws);
+    if (FAILED(hr)) return hr;
+    return wstring_2_string(ws.c_str(), ws.size(), dst);
+#else
+    return string_convert(base::encoding::utf8_2_ansi_posix, s, l, dst);
+#endif
+}
+
+
 inline HRESULT string_2_utf8(const std::string & s, std::string & utf8)
 {
     return string_2_utf8(s.c_str(), s.size(), utf8);
 }
+inline HRESULT string_2_utf8_v2(const std::string & s, std::string & utf8)
+{
+    return string_2_utf8_v2(s.c_str(), s.size(), utf8);
+}
+
 inline HRESULT utf8_2_string(const std::string & utf8, std::string & s)
 {
     return utf8_2_string(utf8.c_str(), utf8.size(), s);
+}
+
+inline HRESULT utf8_2_string_v2(const std::string & utf8, std::string & s)
+{
+    return utf8_2_string_v2(utf8.c_str(), utf8.size(), s);
 }
 
 

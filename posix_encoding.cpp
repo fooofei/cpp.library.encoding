@@ -55,7 +55,7 @@ namespace base {
             else 
             {
                 rtsize += dst_cbsize-outbytesleft;
-                *out_size = dst_cbsize;
+                *out_size = rtsize;
                 hr = S_OK;
             }
             iconv_close(cd);

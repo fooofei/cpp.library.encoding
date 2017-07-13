@@ -80,16 +80,26 @@ int test_encoding_convert()
 
     {
         std::string utf8_2;
+        std::string utf8_v2;
         string_2_utf8(gb18030, utf8_2);
+        string_2_utf8_v2(gb18030, utf8_v2);
         ASSERT_EXCEPT(utf8_2.size() == utf8.size());
         ASSERT_EXCEPT(0 == memcmp(utf8.c_str(), utf8_2.c_str(), utf8.size()));
+
+        ASSERT_EXCEPT(utf8_2.size() == utf8_v2.size());
+        ASSERT_EXCEPT(utf8_2 == utf8_v2);
     }
 
     {
         std::string gb18030_2;
+        std::string gb18030_v2;
         utf8_2_string(utf8, gb18030_2);
+        utf8_2_string_v2(utf8, gb18030_v2);
         ASSERT_EXCEPT(gb18030.size() == gb18030_2.size());
         ASSERT_EXCEPT(0 == memcmp(gb18030_2.c_str(), gb18030.c_str(), gb18030_2.size()));
+
+        ASSERT_EXCEPT(gb18030_2.size() == gb18030_v2.size());
+        ASSERT_EXCEPT(gb18030_2 == gb18030_v2);
     }
 
 
