@@ -12,31 +12,32 @@
 class u16string_bytes_t
 {
 public:
-
-    typedef std::vector<unsigned char > u16string_bytes_type;
+    //typedef std::vector<unsigned char > u16string_bytes_type;
 
     //for debug
-    //typedef std::wstring u16string_bytes_type;
+    typedef std::wstring u16string_bytes_type;
 
 #ifdef WIN32
     typedef wchar_t char16_type;
 #else
     typedef unsigned short char16_type;
 #endif
+
+    typedef char16_type value_type;
 private:
     u16string_bytes_type buf_;
 public:
-    u16string_bytes_t(){
+    u16string_bytes_t() {
         //assert sizeof(char16_type) >= sizeof(u16string_bytes_type::value_type);
     }
-    explicit u16string_bytes_t(const u16string_bytes_t & rhs){
-        assign(rhs.c_str(),rhs.size());
+    explicit u16string_bytes_t(const u16string_bytes_t & rhs) {
+        assign(rhs.c_str(), rhs.size());
     }
-    u16string_bytes_t(const char16_type * p, size_t l){
-        assign(p,l);
+    u16string_bytes_t(const char16_type * p, size_t l) {
+        assign(p, l);
     }
 
-    ~u16string_bytes_t(){
+    ~u16string_bytes_t() {
         ;
     }
 
@@ -47,7 +48,7 @@ public:
     size_t size_of_bytes() const {
         return buf_.size() * sizeof(u16string_bytes_type::value_type);
     }
-    void * ptr(){
+    void * ptr() {
         if (empty()) return NULL;
         return &buf_[0];
     }
@@ -57,14 +58,14 @@ public:
         return (const char16_type *)ptr();
     }
     size_t char16_size() const {
-        return size_of_bytes()/sizeof(char16_type);
+        return size_of_bytes() / sizeof(char16_type);
     }
 
 
     bool empty() const {
         return buf_.empty();
     }
-    size_t size() const{
+    size_t size() const {
         return char16_size();
     }
     const char16_type * c_str() const {
@@ -72,27 +73,43 @@ public:
     }
 
 
-    HRESULT assign(const std::string & s){
+    HRESULT assign(const std::string & s) {
         // string_convert string_2_u16string
         return E_NOTIMPL;
     }
 
-    HRESULT to_string(std::string & s) const{
+    HRESULT to_string(std::string & s) const {
         // string_convert u16string_2_string
         return E_NOTIMPL;
     }
 
-    HRESULT assign(const char16_type * p, size_t l){
+    HRESULT assign(const char16_type * p, size_t l) {
         if (!(p && l)) return E_INVALIDARG;
-        const char16_type * e = p+l;
+        const char16_type * e = p + l;
         buf_.assign(
             (u16string_bytes_type::const_pointer)p
-            ,(u16string_bytes_type::const_pointer)e
-            );
+            , (u16string_bytes_type::const_pointer)e
+        );
         return S_OK;
     }
     HRESULT assign(const u16string_bytes_t & rhs) {
         return assign(rhs.c_str(), rhs.size());
+    }
+
+    void clear() {
+        buf_.clear();
+    }
+
+    void resize(size_t s) {
+        buf_.resize(s * sizeof(value_type)/ sizeof(u16string_bytes_type::value_type));
+    }
+
+    value_type &  operator[](const size_t off){
+        return *((value_type *)ptr()+off);
+    }
+
+    const value_type & operator[](const size_t off) const {
+        return *(char16_ptr() + off);
     }
 
 
@@ -252,30 +269,7 @@ public:
 { \
     if(!(exp)){ \
     fprintf(stderr,"unexcept file:%s, line:%d\n",__FILE__,__LINE__); \
-    exit(0); \
+    exit(-1); \
     } \
 } while (0);
 
-int test_u16string_bytes()
-{
-
-    std::wstring s(L"helloWorld\t");
-
-    u16string_bytes_t a;
-    u16string_bytes_t b(s.c_str(),s.size());
-
-    ASSERT_EXCEPT(b.find(L"e",0,1) == s.find(L"e",0,1));
-
-    ASSERT_EXCEPT(b.startswith(L'h') == true);
-    ASSERT_EXCEPT(b.startswith(L'e') == false);
-    ASSERT_EXCEPT(b.endswith(L'\t') == true);
-    ASSERT_EXCEPT(b.startswith(L'd') == false);
-
-    b.tolower();
-    b.trim_tail(u16string_bytes_t(std::wstring(L"\t").c_str(),1));
-    ASSERT_EXCEPT(b.is(u16string_bytes_t(L"helloworld",10)));
-
-    printf("pass test_u16string_bytes()\n");
-
-    return 0;
-}

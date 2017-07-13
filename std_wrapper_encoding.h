@@ -109,30 +109,37 @@ inline HRESULT utf8_2_string(const std::string & utf8, std::string & s)
 }
 
 
-
-#if __cplusplus >= 201103L
-inline HRESULT string_2_u16string(const char * s, size_t l, std::u16string & dst)
+template<typename u16string_type>
+inline HRESULT string_2_u16string(const char * s, size_t l, u16string_type & dst)
 {
     return string_convert(base::encoding::string_2_u16string
         , s, l * sizeof(char), dst);
 }
 
-inline HRESULT string_2_u16string(const std::string & s, std::u16string & dst)
+template<typename u16string_type>
+inline HRESULT string_2_u16string(const std::string & s, u16string_type & dst)
 {
     return string_2_u16string(s.c_str(), s.size(), dst);
 }
 
-inline HRESULT u16string_2_string(const char16_t * s, size_t l, std::string & dst)
+inline HRESULT u16string_2_string(const unsigned short * s, size_t l, std::string & dst)
 {
     return string_convert(base::encoding::u16string_2_string
-        , s, l * sizeof(char16_t), dst);
+        , s, l * sizeof(unsigned short), dst);
 }
 
-inline HRESULT u16string_2_string(const std::u16string & s, std::string & dst)
+template<typename u16string_type>
+inline HRESULT u16string_2_string(const u16string_type & s, std::string & dst)
 {
-    return u16string_2_string(s.c_str(), s.size(), dst);
+    return u16string_2_string((const unsigned short *)s.c_str(), s.size(), dst);
 }
+
+#if __cplusplus >= 201103L
+typedef std::u16string my_u16string;
+#else
 #endif
+
+
 
 #ifndef _tstring
 #ifdef UNICODE
@@ -147,6 +154,15 @@ namespace base
 };
 #endif
 #endif // !_tstring
+
+#ifndef _TCHAR_DEFINED
+#define _TCHAR_DEFINED
+#ifdef UNICODE
+typedef wchar_t TCHAR;
+#else
+typedef char TCHAR;
+#endif
+#endif
 
 inline 
     HRESULT string_2_tstring(const char * s, size_t l, base::string_t & dst)
