@@ -131,6 +131,7 @@ namespace base {
         inline 
             HRESULT wstring_2_u16string(const void * src, size_t src_size, void * dst, size_t * dst_size)
         {
+            // Not include NULL terminate.
             #ifdef WIN32
             if (!dst_size) return E_INVALIDARG;
             if (dst)
@@ -138,7 +139,7 @@ namespace base {
                 if (*dst_size < src_size) return E_OUTOFMEMORY;
                 memcpy(dst, src, src_size);
             }
-            else  { *dst_size = src_size; }
+            *dst_size = src_size;
             return S_OK;
             #else
             return utf32le_2_utf16le_posix(src, src_size, dst, dst_size);
@@ -155,7 +156,7 @@ namespace base {
                 if (*dst_size < src_size) return E_OUTOFMEMORY;
                 memcpy(dst, src, src_size);
             }
-            else { *dst_size = src_size; }
+            *dst_size = src_size;
             return S_OK;
             #else
             return utf16le_2_utf32le_posix(src, src_size, dst, dst_size);
