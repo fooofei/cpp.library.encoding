@@ -1,44 +1,44 @@
 
-#include "posix_encoding.h"
+
 
 #ifndef WIN32
 #include <iconv.h>
 #include <errno.h>
 #include <locale.h>
-
 #include <stdlib.h>
-
+#include "encoding_posix.h"
 namespace base { 
     namespace encoding {
 
         HRESULT encoding_convt_cbsize(const char * srccode, const char * dstcode
-            ,const char * src, size_t src_cbsize
-            ,size_t * out_size)
+            , const char * src , size_t src_cbsize
+            , size_t * dst_cbsize)
         {
             iconv_t cd;
-            char dst[0x100]={};
-            size_t dst_cbsize=0x100;
-            char * inbuf(const_cast<char *>(src));
-            char * outbuf (dst);
+            char buffer[0x100] = {};
+            size_t buffer_size = 0x100;
+            char * inbuf = (const_cast<char*>(src));
+            const char * inbuf_end = inbuf + src_cbsize;
+            char * outbuf = buffer;
             HRESULT hr=S_OK;
+            size_t insize = src_cbsize;
+            size_t outbytesleft = buffer_size;
+            size_t retsize = 0;
+            bool berror = false;
 
             cd = iconv_open(dstcode, srccode);
             if (cd == (iconv_t)(-1)) return E_FAIL;
 
-            size_t insize = src_cbsize;
-            size_t outbytesleft = dst_cbsize;
-            size_t rtsize = 0;
-            bool berror = false;
-            while(iconv(cd, &inbuf, &insize, &outbuf, &outbytesleft) == kInvalidSize)
+            while(iconv(cd, &inbuf, &insize, &outbuf, &outbytesleft) == (size_t)(-1))
             {
 				// if use global variable `errno`, so I don't think iconv() is thread safe.
                 if( errno == E2BIG )
                 {
-                    outbuf=dst;
-                    rtsize += dst_cbsize-outbytesleft;
-                    outbytesleft=dst_cbsize;
+                    retsize += buffer_size - outbytesleft;
+                    outbuf = buffer;
+                    outbytesleft = buffer_size;
                 }
-                else if (errno == EILSEQ && insize>0)
+                else if ((errno == EILSEQ) && (insize>0) && inbuf<inbuf_end)
                 {
 					// invalid multibyte sequence, then skip it.
                     ++inbuf;
@@ -51,35 +51,38 @@ namespace base {
                     break;
                 }
             }
-            if( berror )  hr = E_FAIL;
+            if (berror || (insize !=0))  hr = E_FAIL;
             else 
             {
-                rtsize += dst_cbsize-outbytesleft;
-                *out_size = rtsize;
+                retsize += buffer_size - outbytesleft;
+                *dst_cbsize = retsize;
                 hr = S_OK;
             }
             iconv_close(cd);
             return hr;
         }
 
-        HRESULT encoding_convt(const char * srccode, const char * dstcode, const char * src , size_t srcCbsize 
-            ,char * dst, size_t * dstCbSize)
+        HRESULT encoding_convt(const char * srccode, const char * dstcode
+            , const char * src, size_t src_cbsize 
+            , char * dst, size_t * dst_cbsize)
         {
             iconv_t cd;
-            char * inbuf(const_cast<char *>(src));
-            char * outbuf (dst);
+            char* inbuf = const_cast<char*>(src);
+            const char * inbuf_end = inbuf + src_cbsize;
+            char *outbuf = dst;
             HRESULT hr=S_OK;
+            size_t insize = src_cbsize;
+            size_t outbytesleft = *dst_cbsize;
+            size_t retsize = 0;
+            bool berror = false;
 
             cd = iconv_open(dstcode,srccode);
             if (cd == (iconv_t)(-1)) return E_FAIL;
 
-            size_t insize = srcCbsize;
-            size_t outbytesleft = *dstCbSize;
-            size_t rtsize = 0;
-            bool berror = false;
-            while (iconv(cd, &inbuf, &insize, &outbuf, &outbytesleft) == kInvalidSize )
+
+            while (iconv(cd, &inbuf, &insize, &outbuf, &outbytesleft) == (size_t)(-1))
             {
-                if( errno == EILSEQ && insize>0)
+                if((errno == EILSEQ )&& (insize>0) && (inbuf < inbuf_end))
                 {
                     ++inbuf;
                     --insize;
@@ -94,8 +97,8 @@ namespace base {
             if( berror ) hr = E_FAIL;
             else
             {
-                rtsize = *dstCbSize - outbytesleft;
-                *dstCbSize = rtsize;
+                retsize = *dst_cbsize - outbytesleft;
+                *dst_cbsize = retsize;
                 hr = S_OK;
             }
             iconv_close(cd);

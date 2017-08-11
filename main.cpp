@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "hresult.h"
-#include "std_wrapper_encoding.h"
+#include "encoding/encoding_std.h"
 #include "u16string_bytes.h"
 
 static

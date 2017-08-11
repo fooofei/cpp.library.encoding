@@ -3,7 +3,7 @@
 #ifndef CORE_WINDOWS_ENCODING_H_
 #define CORE_WINDOWS_ENCODING_H_
 
-#ifdef _WIN32
+#ifdef WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -16,19 +16,7 @@ namespace base {
         // return size is need size, not include NULL terminate, and dst_size no need to include NULL terminate size,
         //     no need to +1.
 
-        inline
-        HRESULT _lasterror_2_hresult()
-    {
-        DWORD v = GetLastError();
-        switch (v)
-        {
-        case ERROR_NO_UNICODE_TRANSLATION:
-        case ERROR_INVALID_PARAMETER: return E_INVALIDARG;
-        case ERROR_INSUFFICIENT_BUFFER: return E_OUTOFMEMORY;
-        default: break;
-        }
-        return HRESULT_FROM_WIN32(v);
-        }
+        HRESULT _lasterror_2_hresult();
 
     inline
         HRESULT utf16le_2_ansi_windows(const wchar_t * src, size_t src_size, char * dst, size_t * dst_size)

@@ -6,36 +6,37 @@
 #ifndef WIN32
 #include <string.h>
 
+typedef int HRESULT;
+#ifndef E_INVALIDARG
+#define E_INVALIDARG  (HRESULT)0x80070057L
+#endif
+#ifndef E_OUTOFMEMORY
+#define E_OUTOFMEMORY (HRESULT)0x8007000EL
+#endif
+#ifndef S_OK
+#define S_OK    (HRESULT)0L
+#endif
+#ifndef E_FAIL
+#define E_FAIL  (HRESULT)0x80004005L
+#endif
+#ifndef FAILED
+#define FAILED(hr) (((HRESULT)(hr)) < 0)
+#endif
+
 namespace base { 
     namespace encoding {
 
-        typedef int HRESULT;
-        #ifndef E_INVALIDARG 
-        #define E_INVALIDARG  (HRESULT)0x80070057L
-        #endif
-        #ifndef E_OUTOFMEMORY
-        #define E_OUTOFMEMORY (HRESULT)0x8007000EL
-        #endif
-        #ifndef S_OK
-        #define S_OK    (HRESULT)0L
-        #endif
-        #ifndef E_FAIL
-        #define E_FAIL  (HRESULT)0x80004005L
-        #endif
-        #ifndef FAILED
-        #define FAILED(hr) (((HRESULT)(hr)) < 0)
-        #endif
+
         
 
 
         static const size_t	 kInvalidSize = size_t(-1);
 
 
-        HRESULT encoding_convt_cbsize(const char * srccode, const char * dstcode
-            ,const char * src , size_t src_cbsize
-            ,size_t * out_size);
-        HRESULT encoding_convt(const char * srccode, const char * dstcode, const char * src, size_t srcCbsize
-            ,char * dst, size_t * dstCbSize);
+        HRESULT encoding_convt_cbsize(const char* srccode,const char* dstcode,
+            const char* src , size_t src_cbsize, size_t * );
+        HRESULT encoding_convt(const char* srccode,const char* dstcode,const char* src , size_t srcCbsize ,
+            char * , size_t * );
 
         inline
             HRESULT iconv_posix(const char * code1, const char * code2, 
@@ -125,7 +126,6 @@ namespace base {
         {
             return iconv_posix(ICONV_CODE_UTF8, ICONV_CODE_ANSI,src, src_size, dst, dst_size);
         }
-
         //
         // !!! src must be NULL terminate.
         HRESULT utf32le_2_ansi_posix2(const void * src, size_t , void * dst, size_t * dst_size);

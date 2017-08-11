@@ -2,11 +2,11 @@
 #ifndef CORE_STD_WRAPPER_ENCODING_H_
 #define CORE_STD_WRAPPER_ENCODING_H_
 
+#include <string>
+
 #include "encoding.h"
 using base::encoding::string_2_wstring;
 using base::encoding::wstring_2_string;
-
-#include <string>
 
 template<typename dest_string_type>
 HRESULT string_convert( HRESULT (*func_convert)(const void *,size_t, void *, size_t *)
@@ -30,8 +30,8 @@ HRESULT string_convert( HRESULT (*func_convert)(const void *,size_t, void *, siz
 
 template<typename dest_string_type>
 HRESULT string_convert(HRESULT(*func_convert)(const void *, size_t, void *, size_t *)
-    ,const void * ptr, size_t size_of_bytes
-    ,dest_string_type & dst)
+    , const void * ptr, size_t size_of_bytes
+    , dest_string_type & dst)
 {
     return string_convert(func_convert, ptr, size_of_bytes, dst, sizeof(typename dest_string_type::value_type));
 }
@@ -180,7 +180,6 @@ typedef std::u16string my_u16string;
 #endif
 
 
-
 #ifndef _tstring
 #ifdef UNICODE
 namespace base
@@ -238,6 +237,7 @@ inline
     return wstring_2_tstring(ws.c_str(),ws.size(),dst);
 }
 
+
 inline 
     HRESULT tstring_2_string(const TCHAR * s, size_t l, std::string & dst)
 {
@@ -271,5 +271,6 @@ inline
 {
     return tstring_2_wstring(src.c_str(),src.size(),ws);
 }
+
 
 #endif //CORE_STD_WRAPPER_ENCODING_H_
