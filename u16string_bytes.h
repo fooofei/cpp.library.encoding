@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <string.h>
 
 //
 // std::wstring is different in Windows and Linux. 
