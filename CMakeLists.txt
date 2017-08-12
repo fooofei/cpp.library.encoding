@@ -4,7 +4,7 @@ set(BINARY_NAME encodingdemo)
 
 project (${BINARY_NAME})
 
-add_executable(${BINARY_NAME} main.cpp)
+add_executable(${BINARY_NAME} main.cpp u16string_bytes.cpp)
 
 add_subdirectory(${CMAKE_HOME_DIRECTORY}/encoding  build_encoding)
 target_link_libraries(${BINARY_NAME} encoding)

@@ -12,10 +12,10 @@
 class u16string_bytes_t
 {
 public:
-    //typedef std::vector<unsigned char > u16string_bytes_type;
+    typedef std::vector<unsigned char > u16string_bytes_type;
 
     //for debug
-    typedef std::wstring u16string_bytes_type;
+    //typedef std::wstring u16string_bytes_type;
 
 #ifdef WIN32
     typedef wchar_t char16_type;
@@ -83,15 +83,7 @@ public:
         return E_NOTIMPL;
     }
 
-    HRESULT assign(const char16_type * p, size_t l) {
-        if (!(p && l)) return E_INVALIDARG;
-        const char16_type * e = p + l;
-        buf_.assign(
-            (u16string_bytes_type::const_pointer)p
-            , (u16string_bytes_type::const_pointer)e
-        );
-        return S_OK;
-    }
+    HRESULT assign(const char16_type * p, size_t l);
     HRESULT assign(const u16string_bytes_t & rhs) {
         return assign(rhs.c_str(), rhs.size());
     }
@@ -126,39 +118,7 @@ public:
     }
 
     // return char16 size, not bytes size.
-    size_t find(const char16_type * substr, size_t off , size_t subsize) const {
-
-        const char16_type * b = c_str();
-        const char16_type * e = b + size();
-        size_t default_ = std::string::npos;
-
-        if (!(!empty() && subsize && substr))
-        {
-            default_;
-        }
-
-
-        if (!(off<size() 
-            && subsize <= (size()-off))
-            )
-        {
-            return default_;
-        }
-
-        b += off;
-        e = e-subsize+1;
-
-        for (;b<e;++b)
-        {
-            if (*b == *substr 
-                && 0 == memcmp(b,substr,subsize*sizeof(char16_type)))
-            {
-                return b-c_str();
-            }
-        }
-
-        return default_;
-    }
+    size_t find(const char16_type * substr, size_t off , size_t subsize) const ;
 
 
     size_t find(const u16string_bytes_t & rhs, size_t off=0) const {
