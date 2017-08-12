@@ -10,4 +10,4 @@ make  || exit 1
 
 cd ..
 rm -rf build
-./encodingdemo || exit 1
+./testencoding || exit 1
