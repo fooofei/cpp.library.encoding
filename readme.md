@@ -17,3 +17,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../cpp_cross_platform_encoding  
 target_link_libraries(${PROJECT_NAME} encoding)
 
 ```
+
+### refs
+
+[UTF-8 遍地开花] http://utf8everywhere.org/zh-cn
