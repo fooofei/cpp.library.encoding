@@ -1,7 +1,7 @@
 # This CMakeLists.txt is for encoding module.
 # Other Module can use it by this:
 #
-# add_subdirectory(${CMAKE_HOME_DIRECTORY}/../../encoding  build_encoding)
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../cpp_cross_platform_encoding  build_encoding)
 # target_link_libraries(${PROJECT_NAME} encoding)
 #
 # add_subdirectory() is add this module for build.
@@ -22,17 +22,19 @@ endif ()
 
 
 # point to the who include this CMakeLists.txt
-#message(STATUS "hjf CMAKE_HOME_DIRECTORY=" ${CMAKE_HOME_DIRECTORY})
+#message(STATUS "CMAKE_HOME_DIRECTORY=" ${CMAKE_HOME_DIRECTORY})
 
 # point to this CMakeLists.txt
-#message(STATUS "hjf CMAKE_CURRENT_SOURCE_DIR=" ${CMAKE_CURRENT_SOURCE_DIR})
+#message(STATUS "CMAKE_CURRENT_SOURCE_DIR=" ${CMAKE_CURRENT_SOURCE_DIR})
 
 # point to this CMakeLists.txt
-#message(STATUS "hjf CMAKE_CURRENT_LIST_DIR=" ${CMAKE_CURRENT_LIST_DIR})
+#message(STATUS "CMAKE_CURRENT_LIST_DIR=" ${CMAKE_CURRENT_LIST_DIR})
 
 add_library(${PROJECT_NAME} STATIC ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding.cpp)
-target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_std.cpp)
-target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/u16string_bytes.cpp)
+target_sources(${PROJECT_NAME} PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_std.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/u16string_bytes.cpp
+    )
 if (WIN32)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.cpp)
 else()

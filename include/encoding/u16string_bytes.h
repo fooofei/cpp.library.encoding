@@ -85,21 +85,15 @@ public:
     }
 
 
-    HRESULT assign(const std::string &s) {
-        // string_convert string_2_u16string
-        return E_NOTIMPL;
-    }
-
-    HRESULT to_string(std::string &s) const {
-        // string_convert u16string_2_string
-        return E_NOTIMPL;
-    }
+    HRESULT assign(const std::string &s) ;
 
     HRESULT assign(const char16_type *p, size_t l);
 
     HRESULT assign(const u16string_bytes_t &rhs) {
         return assign(rhs.c_str(), rhs.size());
     }
+
+    HRESULT to_string(std::string &s) const ;
 
     void clear() {
         buf_.clear();

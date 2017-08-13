@@ -1,6 +1,7 @@
 
 #include "../include/encoding/hresult.h"
 #include "../include/encoding/u16string_bytes.h"
+#include "../include/encoding/encoding_std.h"
 
 
 HRESULT u16string_bytes_t::assign(const char16_type *p, size_t l) {
@@ -10,6 +11,16 @@ HRESULT u16string_bytes_t::assign(const char16_type *p, size_t l) {
             (u16string_bytes_type::const_pointer) p, (u16string_bytes_type::const_pointer) e
     );
     return S_OK;
+}
+
+HRESULT u16string_bytes_t::assign(const std::string &s) {
+    // string_convert string_2_u16string
+    return string_2_u16string(s,*this);
+}
+
+HRESULT u16string_bytes_t::to_string(std::string &s) const {
+    // string_convert u16string_2_string
+    return u16string_2_string(*this,s);
 }
 
 
