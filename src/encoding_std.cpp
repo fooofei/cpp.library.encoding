@@ -163,6 +163,7 @@ HRESULT wstring_2_u16string(const wchar_t *src, size_t src_size, my_u16string &d
     if (!(src && src_size))
         return E_INVALIDARG;
     dst.assign(src, src_size);
+    return S_OK;
 #else
     return string_convert(utf32le_2_utf16le, src, src_size * sizeof(wchar_t), dst);
 #endif
@@ -179,6 +180,7 @@ HRESULT u16string_2_wstring(const unsigned short *src, size_t src_size, std::wst
     if (!(src && src_size))
         return E_INVALIDARG;
     dst.assign(src, src_size);
+    return S_OK;
 #else
     return string_convert(utf16le_2_utf32le, src, src_size * sizeof(wchar_t), dst);
 #endif
