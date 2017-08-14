@@ -22,7 +22,7 @@
                         }                \
                 }                        \
         } while (0);
-#define _UNUSED_PARAM ((void)src; (void)src_size; (void)dst; (void)dst_size;);
+#define _UNUSED_PARAM do{(void)src; (void)src_size; (void)dst; (void)dst_size;} while(0)
 
 namespace encoding
 {

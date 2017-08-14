@@ -153,7 +153,7 @@ HRESULT u16string_2_string(const unsigned short *src, size_t src_size, std::stri
 
 HRESULT u16string_2_string(const my_u16string &src, std::string &dst)
 {
-    return u16string_2_string(src.c_str(), src.size(), dst);
+    return u16string_2_string((const unsigned short *)src.c_str(), src.size(), dst);
 }
 
 // wstring <-> u16string
@@ -179,7 +179,7 @@ HRESULT u16string_2_wstring(const unsigned short *src, size_t src_size, std::wst
 #ifdef WIN32
     if (!(src && src_size))
         return E_INVALIDARG;
-    dst.assign(src, src_size);
+    dst.assign((const wchar_t *)src, src_size);
     return S_OK;
 #else
     return string_convert(utf16le_2_utf32le, src, src_size * sizeof(wchar_t), dst);
@@ -188,7 +188,7 @@ HRESULT u16string_2_wstring(const unsigned short *src, size_t src_size, std::wst
 
 HRESULT u16string_2_wstring(const my_u16string &src, std::wstring &dst)
 {
-    return u16string_2_wstring(src.c_str(), src.size(), dst);
+    return u16string_2_wstring((const unsigned short *)src.c_str(), src.size(), dst);
 }
 
 // utf8 <-> u16string
@@ -209,5 +209,5 @@ HRESULT u16string_2_utf8(const unsigned short *src, size_t src_size, std::string
 
 HRESULT u16string_2_utf8(const my_u16string &src, std::string &dst)
 {
-    return u16string_2_utf8(src.c_str(), src.size(), dst);
+    return u16string_2_utf8((const unsigned short *)src.c_str(), src.size(), dst);
 }
