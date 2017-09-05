@@ -36,7 +36,11 @@ add_library(${PROJECT_NAME} STATIC ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding.cpp)
 target_sources(${PROJECT_NAME} PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_std.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/u16string_bytes.cpp
-    )
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/encoding.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/encoding_std.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/u16string_bytes.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/hresult.h
+  )
 if (WIN32)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.cpp)
 else()
