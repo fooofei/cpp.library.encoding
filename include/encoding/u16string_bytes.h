@@ -160,12 +160,14 @@ class u16string_bytes_t
 
     bool startswith(char16_type c) const
     {
-        return startswith(u16string_bytes_t(&c, 1));
+      u16string_bytes_t v(&c, 1);
+        return startswith(v);
     }
 
     bool endswith(char16_type c) const
     {
-        return endswith(u16string_bytes_t(&c, 1));
+      u16string_bytes_t v(&c, 1);
+        return endswith(v);
     }
 
     bool is(const u16string_bytes_t &rhs) const
