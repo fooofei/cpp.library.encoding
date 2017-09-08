@@ -54,6 +54,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
 if (NOT WIN32)
     # fPIC for other library link
     target_compile_options(${PROJECT_NAME} PRIVATE -fPIC)
+    target_compile_options(${PROJECT_NAME} PRIVATE -fvisibility=hidden)
 endif()
 
 if (APPLE)
