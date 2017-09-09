@@ -14,9 +14,9 @@
 add in CMakeLists.txt
 
 if (NOT TARGET encoding)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../cpp_cross_platform_encoding  build_encoding)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../cpp_cross_platform_encoding  build_encoding)
 endif ()
- target_link_libraries(${PROJECT_NAME} encoding)
+target_link_libraries(${PROJECT_NAME} encoding)
 
 ```
 
