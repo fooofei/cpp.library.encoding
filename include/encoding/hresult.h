@@ -2,8 +2,12 @@
 #pragma once
 
 #ifdef WIN32
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
+#undef WIN32_LEAN_AND_MEAN
+#endif
+
 #else
 typedef int HRESULT;
 #ifndef E_INVALIDARG 

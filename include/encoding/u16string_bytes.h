@@ -1,12 +1,12 @@
 
-#pragma once
 
 #ifndef CORE_ENCODING_U16STRING_BYTES_H
 #define CORE_ENCODING_U16STRING_BYTES_H
+#pragma once
 
 #include <string>
 #include <vector>
-#include <string.h>
+#include <stdint.h>
 #include "hresult.h"
 
 //
@@ -17,184 +17,78 @@
 // std::u16string is the same effect, but std::u16string is c++11 above.
 class u16string_bytes_t
 {
-  public:
-    typedef std::vector<unsigned char> u16string_bytes_type;
+public:
+  typedef std::vector<uint8_t> u16string_bytes_type;
 
-//for debug
-//typedef std::wstring u16string_bytes_type;
+  //for debug
+  //typedef std::wstring u16string_bytes_type;
 
 #ifdef WIN32
-    typedef wchar_t char16_type;
+  typedef wchar_t char16_type;
 #else
-    typedef unsigned short char16_type;
+  typedef unsigned short char16_type;
 #endif
 
-    typedef char16_type value_type;
+  typedef char16_type value_type;
 
-  private:
-    u16string_bytes_type buf_;
+private:
+  u16string_bytes_type buf_;
 
-  public:
-    u16string_bytes_t()
-    {
-        //assert sizeof(char16_type) >= sizeof(u16string_bytes_type::value_type);
-    }
+public:
+  u16string_bytes_t();
+  explicit u16string_bytes_t(const u16string_bytes_t &rhs);
+  u16string_bytes_t(const char16_type *p, size_t l);
+  ~u16string_bytes_t();
 
-    explicit u16string_bytes_t(const u16string_bytes_t &rhs)
-    {
-        assign(rhs.c_str(), rhs.size());
-    }
+  const void *ptr() const;
+  size_t size_of_bytes() const;
 
-    u16string_bytes_t(const char16_type *p, size_t l)
-    {
-        assign(p, l);
-    }
+  void *ptr();
+  const char16_type *char16_ptr() const;
+  size_t char16_size() const;
+  bool empty() const;
 
-    ~u16string_bytes_t()
-    {
-        ;
-    }
+  size_t size() const;
+  const char16_type *c_str() const;
+  HRESULT assign(const std::string &s);
 
-    const void *ptr() const
-    {
-        if (empty())
-            return NULL;
-        return &buf_[0];
-    }
+  HRESULT assign(const char16_type *p, size_t l);
 
-    size_t size_of_bytes() const
-    {
-        return buf_.size() * sizeof(u16string_bytes_type::value_type);
-    }
+  HRESULT assign(const u16string_bytes_t &rhs);
 
-    void *ptr()
-    {
-        if (empty())
-            return NULL;
-        return &buf_[0];
-    }
+  HRESULT to_string(std::string &s) const;
 
-    const char16_type *char16_ptr() const
-    {
-        return (const char16_type *)ptr();
-    }
+  void clear();
 
-    size_t char16_size() const
-    {
-        return size_of_bytes() / sizeof(char16_type);
-    }
+  void resize(size_t s);
 
-    bool empty() const
-    {
-        return buf_.empty();
-    }
+  value_type &operator[](const size_t off);
 
-    size_t size() const
-    {
-        return char16_size();
-    }
+  const value_type &operator[](const size_t off) const;
+  void tolower();
 
-    const char16_type *c_str() const
-    {
-        return char16_ptr();
-    }
+  // return char16 size, not bytes size.
+  size_t find(const char16_type *substr, size_t off, size_t subsize) const;
 
-    HRESULT assign(const std::string &s);
+  size_t find(const u16string_bytes_t &rhs, size_t off = 0) const;
 
-    HRESULT assign(const char16_type *p, size_t l);
+  bool endswith(const u16string_bytes_t &rhs) const;
 
-    HRESULT assign(const u16string_bytes_t &rhs)
-    {
-        return assign(rhs.c_str(), rhs.size());
-    }
+  bool startswith(const u16string_bytes_t &rhs) const;
+  bool startswith(char16_type c) const;
 
-    HRESULT to_string(std::string &s) const;
+  bool endswith(char16_type c) const;
 
-    void clear()
-    {
-        buf_.clear();
-    }
+  bool is(const u16string_bytes_t &rhs) const;
+  size_t find_first_not_of(const u16string_bytes_t &rhs) const;
 
-    void resize(size_t s)
-    {
-        buf_.resize(s * sizeof(value_type) / sizeof(u16string_bytes_type::value_type));
-    }
+  size_t find_last_not_of(const u16string_bytes_t &rhs) const;
 
-    value_type &operator[](const size_t off)
-    {
-        return *((value_type *)ptr() + off);
-    }
-
-    const value_type &operator[](const size_t off) const
-    {
-        return *(char16_ptr() + off);
-    }
-
-    void tolower();
-
-    // return char16 size, not bytes size.
-    size_t find(const char16_type *substr, size_t off, size_t subsize) const;
-
-    size_t find(const u16string_bytes_t &rhs, size_t off = 0) const
-    {
-        return find(rhs.c_str(), off, rhs.size());
-    }
-
-    bool endswith(const u16string_bytes_t &rhs) const
-    {
-        if (rhs.size() <= size())
-        {
-            return find(rhs, size() - rhs.size()) < size();
-        }
-        return false;
-    }
-
-    bool startswith(const u16string_bytes_t &rhs) const
-    {
-        if (rhs.size() <= size())
-        {
-            return 0 == memcmp(c_str(), rhs.c_str(), rhs.size_of_bytes());
-        }
-        return false;
-    }
-
-    bool startswith(char16_type c) const
-    {
-      u16string_bytes_t v(&c, 1);
-        return startswith(v);
-    }
-
-    bool endswith(char16_type c) const
-    {
-      u16string_bytes_t v(&c, 1);
-        return endswith(v);
-    }
-
-    bool is(const u16string_bytes_t &rhs) const
-    {
-        return rhs.size() == size() && startswith(rhs);
-    }
-
-    size_t find_first_not_of(const u16string_bytes_t &rhs) const;
-
-    size_t find_last_not_of(const u16string_bytes_t &rhs) const;
-
-    void lstrip(const u16string_bytes_t &s);
-
-    void rstrip(const u16string_bytes_t &s);
-
-    void trim_head(const u16string_bytes_t &s)
-    {
-        lstrip(s);
-    }
-
-    void trim_tail(const u16string_bytes_t &s)
-    {
-        return rstrip(s);
-    }
+  void lstrip(const u16string_bytes_t &s);
+  void rstrip(const u16string_bytes_t &s);
+  void trim_head(const u16string_bytes_t &s);
+  void trim_tail(const u16string_bytes_t &s);
 };
-
-#endif //CORE_ENCODING_U16STRING_BYTES_H
 
 #ifndef ASSERT_EXCEPT
 #define ASSERT_EXCEPT(exp)                                                      \
@@ -207,3 +101,7 @@ class u16string_bytes_t
         }                                                                       \
     } while (0);
 #endif //ASSERT_EXCEPT
+
+
+#endif //CORE_ENCODING_U16STRING_BYTES_H
+

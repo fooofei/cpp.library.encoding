@@ -2,6 +2,8 @@
 #include "../include/encoding/encoding_std.h"
 #include "../include/encoding/encoding.h"
 
+
+
 using namespace encoding;
 
 template <typename dest_string_type>
@@ -34,7 +36,8 @@ string_convert(HRESULT (*func_convert)(const void *, size_t, void *, size_t *), 
     return string_convert(func_convert, ptr, size_of_bytes, dst, sizeof(typename dest_string_type::value_type));
 }
 
-HRESULT string_2_wstring(const char *src, size_t src_size, std::wstring &dst)
+HRESULT 
+string_2_wstring(const char *src, size_t src_size, std::wstring &dst)
 {
 
 #ifdef WIN32
@@ -44,12 +47,14 @@ HRESULT string_2_wstring(const char *src, size_t src_size, std::wstring &dst)
 #endif
 }
 
-HRESULT string_2_wstring(const std::string &src, std::wstring &dst)
+HRESULT 
+string_2_wstring(const std::string &src, std::wstring &dst)
 {
     return string_2_wstring(src.c_str(), src.size(), dst);
 }
 
-HRESULT wstring_2_string(const wchar_t *src, size_t src_size, std::string &dst)
+HRESULT 
+wstring_2_string(const wchar_t *src, size_t src_size, std::string &dst)
 {
 #ifdef WIN32
     return string_convert(utf16le_2_mbcs, src, src_size * sizeof(wchar_t), dst);
@@ -58,13 +63,15 @@ HRESULT wstring_2_string(const wchar_t *src, size_t src_size, std::string &dst)
 #endif
 }
 
-HRESULT wstring_2_string(const std::wstring &src, std::string &dst)
+HRESULT 
+wstring_2_string(const std::wstring &src, std::string &dst)
 {
     return wstring_2_string(src.c_str(), src.size(), dst);
 }
 
 // string <-> utf8
-HRESULT string_2_utf8(const char *src, size_t src_size, std::string &dst)
+HRESULT 
+string_2_utf8(const char *src, size_t src_size, std::string &dst)
 {
 
 #ifdef WIN32
@@ -80,12 +87,14 @@ HRESULT string_2_utf8(const char *src, size_t src_size, std::string &dst)
 #endif
 }
 
-HRESULT string_2_utf8(const std::string &src, std::string &dst)
+HRESULT 
+string_2_utf8(const std::string &src, std::string &dst)
 {
     return string_2_utf8(src.c_str(), src.size(), dst);
 }
 
-HRESULT utf8_2_string(const char *src, size_t src_size, std::string &dst)
+HRESULT 
+utf8_2_string(const char *src, size_t src_size, std::string &dst)
 {
 #ifdef WIN32
     std::wstring ws;
@@ -100,14 +109,16 @@ HRESULT utf8_2_string(const char *src, size_t src_size, std::string &dst)
 #endif
 }
 
-HRESULT utf8_2_string(const std::string &src, std::string &dst)
+HRESULT 
+utf8_2_string(const std::string &src, std::string &dst)
 {
     return utf8_2_string(src.c_str(), src.size(), dst);
 }
 
 // wstring <-> utf8
 
-HRESULT wstring_2_utf8(const wchar_t *src, size_t src_size, std::string &dst)
+HRESULT 
+wstring_2_utf8(const wchar_t *src, size_t src_size, std::string &dst)
 {
 #ifdef WIN32
     return string_convert(utf16le_2_utf8, src, src_size * sizeof(wchar_t), dst);
@@ -116,7 +127,8 @@ HRESULT wstring_2_utf8(const wchar_t *src, size_t src_size, std::string &dst)
 #endif
 }
 
-HRESULT wstring_2_utf8(const std::wstring &src, std::string &dst)
+HRESULT 
+wstring_2_utf8(const std::wstring &src, std::string &dst)
 {
     return wstring_2_utf8(src.c_str(), src.size(), dst);
 }
@@ -162,7 +174,7 @@ HRESULT wstring_2_u16string(const wchar_t *src, size_t src_size, my_u16string &d
 #ifdef WIN32
     if (!(src && src_size))
         return E_INVALIDARG;
-    dst.assign(src, src_size);
+    dst.assign((const my_u16string::value_type *)src, src_size);
     return S_OK;
 #else
     return string_convert(utf32le_2_utf16le, src, src_size * sizeof(wchar_t), dst);
