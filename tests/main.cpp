@@ -7,6 +7,7 @@
 #include <memory>
 #include <stdint.h>
 #include <stdlib.h>
+#include <cstring>
 #include "../include/encoding/hresult.h"
 #include "encoding/encoding_std.h"
 #include "encoding/u16string_bytes.h"
