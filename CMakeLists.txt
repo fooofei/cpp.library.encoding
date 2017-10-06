@@ -42,9 +42,15 @@ target_sources(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/hresult.h
   )
 if (WIN32)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.cpp)
+    target_sources(${PROJECT_NAME} PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.h
+            )
 else()
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.cpp)
+    target_sources(${PROJECT_NAME} PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.h
+            )
 endif()
 
 
