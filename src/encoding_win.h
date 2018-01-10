@@ -16,9 +16,6 @@
 // return size is need size, not include NULL terminate, and dst_size no need to include NULL terminate size,
 //     no need to +1.
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 HRESULT
 _lasterror_2_hresult();
@@ -37,9 +34,6 @@ utf8_2_utf16le_windows(const char *src, size_t src_size, wchar_t *dst, size_t *d
 HRESULT
 utf16le_2_utf8_windows(const wchar_t *src, size_t src_size, char *dst, size_t *dst_size);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif // WIN32
 #endif //CORE_ENCODING_WIN_H

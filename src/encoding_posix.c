@@ -7,6 +7,8 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <stdbool.h> 
+#include <string.h>
+
 #include "encoding_posix.h"
 
 HRESULT
@@ -157,6 +159,107 @@ mbcs_2_utf32le_posix2(const void *src, size_t src_size, void *dst, size_t *dst_s
   setlocale(LC_ALL, restore_val2);
   free(restore_val2);
   return hr;
+}
+
+
+
+HRESULT
+iconv_posix(const char *code1, const char *code2,
+    const void *src, size_t src_size,
+    void *dst, size_t *dst_size)
+{
+    if (dst)
+    {
+        return encoding_convt(code1, code2, (const char *)src, src_size, (char *)dst, dst_size);
+    }
+    else
+    {
+        return encoding_convt_cbsize(code1, code2, (const char *)src, src_size, dst_size);
+    }
+}
+
+
+HRESULT
+utf16le_2_mbcs_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_UTF16LE, ICONV_CODE_MBCS, src, src_size, dst, dst_size);
+}
+
+
+HRESULT
+mbcs_2_utf16le_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_MBCS, ICONV_CODE_UTF16LE, src, src_size, dst, dst_size);
+}
+
+inline
+HRESULT
+utf8_2_utf16le_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_UTF8, ICONV_CODE_UTF16LE, src, src_size, dst, dst_size);
+}
+
+
+HRESULT
+utf16le_2_utf8_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_UTF16LE, ICONV_CODE_UTF8, src, src_size, dst, dst_size);
+}
+
+
+HRESULT
+mbcs_2_utf32le_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_MBCS, ICONV_CODE_UTF32LE, src, src_size, dst, dst_size);
+}
+
+
+HRESULT
+utf32le_2_mbcs_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_UTF32LE, ICONV_CODE_MBCS, src, src_size, dst, dst_size);
+}
+
+
+HRESULT
+utf32le_2_utf8_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_UTF32LE, ICONV_CODE_UTF8, src, src_size, dst, dst_size);
+}
+
+
+HRESULT
+utf8_2_utf32le_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_UTF8, ICONV_CODE_UTF32LE, src, src_size, dst, dst_size);
+}
+
+
+HRESULT
+utf32le_2_utf16le_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_UTF32LE, ICONV_CODE_UTF16LE, src, src_size, dst, dst_size);
+}
+
+
+HRESULT
+utf16le_2_utf32le_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_UTF16LE, ICONV_CODE_UTF32LE, src, src_size, dst, dst_size);
+}
+
+
+HRESULT
+mbcs_2_utf8_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_MBCS, ICONV_CODE_UTF8, src, src_size, dst, dst_size);
+}
+
+
+HRESULT
+utf8_2_mbcs_posix(const void *src, size_t src_size, void *dst, size_t *dst_size)
+{
+    return iconv_posix(ICONV_CODE_UTF8, ICONV_CODE_MBCS, src, src_size, dst, dst_size);
 }
 
 #endif

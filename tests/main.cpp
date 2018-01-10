@@ -101,7 +101,7 @@ static int test_encoding_convert()
         ASSERT_EXCEPT(0 == memcmp(gb18030_2.c_str(), gb18030.c_str(), gb18030_2.size()));
     }
 
-    printf("pass test_encoding_convert\n");
+    printf("pass test_encoding_convert()\n");
 
     return 0;
 }

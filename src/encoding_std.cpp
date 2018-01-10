@@ -1,10 +1,14 @@
 
 #include "../include/encoding/encoding_std.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "../include/encoding/encoding.h"
+#ifdef __cplusplus
+}
+#endif
 
-
-
-using namespace encoding;
 
 template <typename dest_string_type>
 HRESULT

@@ -2,22 +2,13 @@
 #ifndef CORE_ENCODING_H
 #define CORE_ENCODING_H
 
-#include <cstddef>
+#include <stdint.h>
+#include <stdlib.h>
+
 #include "hresult.h"
 
 
-#ifndef NAMESPACE_ENCODING_BEGIN
-#define NAMESPACE_ENCODING_BEGIN namespace encoding {
-#endif 
-
-#ifndef NAMESPACE_END
-#define NAMESPACE_END }
-#endif
-
-
-NAMESPACE_ENCODING_BEGIN
-
-// Note: All size are bytes size.
+// All size are bytes size.
 
 // mbcs <-> utf16le
 HRESULT 
@@ -61,6 +52,6 @@ HRESULT
 utf32le_2_utf16le(const void *, size_t, void *, size_t *);
 
 
-NAMESPACE_END;//
+
 
 #endif // CORE_ENCODING_H

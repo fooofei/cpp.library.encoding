@@ -1,8 +1,11 @@
 
+#include <string.h>
+
+
 #include "../include/encoding/hresult.h"
 #include "../include/encoding/u16string_bytes.h"
 #include "../include/encoding/encoding_std.h"
-#include <string.h>
+
 
 u16string_bytes_t::u16string_bytes_t()
 {
