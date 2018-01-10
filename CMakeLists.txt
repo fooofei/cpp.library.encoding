@@ -18,10 +18,8 @@
 cmake_minimum_required(VERSION 2.8.14)
 project(encoding)
 
-if (APPLE)
-    set(CMAKE_MACOSX_RPATH 0)
-endif ()
 
+set(LIBRARY_NAME ${PROJECT_NAME})
 
 # point to the who include this CMakeLists.txt
 #message(STATUS "CMAKE_HOME_DIRECTORY=" ${CMAKE_HOME_DIRECTORY})
@@ -32,43 +30,62 @@ endif ()
 # point to this CMakeLists.txt
 #message(STATUS "CMAKE_CURRENT_LIST_DIR=" ${CMAKE_CURRENT_LIST_DIR})
 
-add_library(${PROJECT_NAME} STATIC ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding.cpp)
-target_sources(${PROJECT_NAME} PRIVATE 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_std.cpp
+
+set(Source_files
+	${CMAKE_CURRENT_SOURCE_DIR}/src/encoding.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_std.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/u16string_bytes.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/encoding.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/encoding_std.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/u16string_bytes.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/hresult.h
-  )
-if (WIN32)
-    target_sources(${PROJECT_NAME} PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.c
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.h
-            )
-else()
-    target_sources(${PROJECT_NAME} PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.c
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.h
-            )
-endif()
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.h
+
+	${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.h
+)
+
+add_library(${LIBRARY_NAME} STATIC ${Source_files})
+
+#if (WIN32)
+#    target_sources(${LIBRARY_NAME} PRIVATE
+#            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.c
+#            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.h
+#            )
+#else()
+#    target_sources(${LIBRARY_NAME} PRIVATE
+#            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.c
+#            ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.h
+#            )
+#endif()
+
+source_group(files FILES ${Source_files})
 
 
 # for others module include
-target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${LIBRARY_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if (NOT WIN32)
     # fPIC for other library link
-    target_compile_options(${PROJECT_NAME} PRIVATE -fPIC)
-    target_compile_options(${PROJECT_NAME} PRIVATE -fvisibility=hidden)
+    target_compile_options(${LIBRARY_NAME} PRIVATE -fPIC)
+    target_compile_options(${LIBRARY_NAME} PRIVATE -fvisibility=hidden)
+	target_compile_options(${LIBRARY_NAME} PRIVATE -fno-common )
 endif()
 
 if (APPLE)
     # Only Apple need link with iconv
-    target_link_libraries(${PROJECT_NAME} iconv)
+    target_link_libraries(${LIBRARY_NAME} iconv)
 endif()
 
 #add_custom_command(TARGET ${PROJECT_NAME}
 #        POST_BUILD
 #        COMMAND mv $<TARGET_FILE_NAME:${PROJECT_NAME}> ../
 #        )
+
+
+
+if (APPLE)
+    set(CMAKE_MACOSX_RPATH 0)
+endif ()
