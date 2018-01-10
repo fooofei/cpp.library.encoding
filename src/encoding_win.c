@@ -84,5 +84,11 @@ utf16le_2_utf8_windows(const wchar_t *src, size_t src_size, char *dst, size_t *d
   }
 }
 
+#else
+void 
+__empty_function()
+{
+
+}
 
 #endif // WIN32

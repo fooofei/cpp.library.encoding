@@ -39,13 +39,20 @@ set(Source_files
     ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/encoding_std.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/u16string_bytes.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/encoding/hresult.h
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.h
-
 	${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_posix.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.h
 )
+# Windows's files move to if, no warning on macOS.
+#if(WIN32)
+#    string(CONCAT Source_files ${Source_files}  ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.c)
+#    string(CONCAT Source_files ${Source_files}  ${CMAKE_CURRENT_SOURCE_DIR}/src/encoding_win.h)
+#endif()
+# use string concat to avoid a warning on macOS, but 
+#  this use let cmake cannot read Source_files right,
+#  it make error  Cannot find source file
+
 
 add_library(${LIBRARY_NAME} STATIC ${Source_files})
 

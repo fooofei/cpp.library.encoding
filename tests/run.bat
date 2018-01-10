@@ -1,5 +1,7 @@
 @echo off
 
+rem please use Windows txt file format CRLF etc.
+
 %~d0
 cd /d %~dp0
 
