@@ -46,16 +46,25 @@ utf8_2_utf16le_windows2(const char * src, size_t src_size, wchar_t ** out_dst, s
     int ret;
     wchar_t * dst = 0;
     size_t dst_size = 0;
+    size_t rsize=0;
 
     ret = utf8_2_utf16le_windows(src, src_size, 0, &dst_size);
-    if (0 == ret)
+    if (0 == ret && dst_size < 0x10000)
     {
         // remember to call free()
-        dst = (wchar_t *)calloc(1, sizeof(wchar_t)*(src_size+1));
+        dst_size += 1;
+        dst = (wchar_t *)calloc(1, sizeof(wchar_t)*dst_size);
         if (!dst) return -ENOMEM;
-        utf8_2_utf16le_windows(src, src_size, dst, &dst_size);
+        rsize = dst_size;
+        utf8_2_utf16le_windows(src, src_size, dst, &rsize);
+        if(rsize>=dst_size)
+        {
+            free(dst);
+            return -1;
+        }
         *out_dst = dst;
-        *out_dst_size = dst_size;
+        dst[rsize]=0;
+        *out_dst_size = rsize;
         return 0;
     }
     return -1;
@@ -82,16 +91,25 @@ utf16le_2_utf8_windows2(const wchar_t *src, size_t src_size, char ** out_dst, si
     int ret;
     char * dst = 0;
     size_t dst_size = 0;
+    size_t rsize=0;
 
     ret = utf16le_2_utf8_windows(src, src_size, 0, &dst_size);
-    if (0 == ret)
+    if (0 == ret && dst_size<0x10000)
     {
         // remember to call free()
-        dst = (char *)calloc(1, (src_size + 1));
+        dst_size += 1;
+        dst = (char *)calloc(1, dst_size);
         if (!dst) return -ENOMEM;
-        utf16le_2_utf8_windows(src, src_size, dst, &dst_size);
+        rsize=dst_size;
+        utf16le_2_utf8_windows(src, src_size, dst, &rsize);
+        if(rsize>=dst_size)
+        {
+            free(dst);
+            return -1;
+        }
         *out_dst = dst;
-        *out_dst_size = dst_size;
+        dst[rsize]=0;
+        *out_dst_size = rsize;
         return 0;
     }
     return -1;
